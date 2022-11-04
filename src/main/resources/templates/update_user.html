@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http:/www.thymeleaf.org">
+<head th:replace="fragments :: html_head(pageTitle='Registration Success')" />
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+<style type="text/css">
+	html, body{
+		background-color: black;
+		padding: 20px;
+	}
+
+	.container{
+		padding: 20px;
+		border-radius: 10px;
+		font-family: sans-serif;
+		text-align: center;
+		width: 75%;
+		height: 75vh;
+		background-color: white;
+		position: absolute;
+		top:0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		margin: auto;
+	}
+
+	/* Rounded border */
+	hr.rounded {
+		width: 100px;
+		text-align: center;
+		border-top: 2px solid black;
+		border-radius: 5px;
+		margin: 30px auto;
+
+	}
+	.btn {
+		width: 300px;
+		height: 40px;
+		border-radius: 5px;
+		cursor: pointer;
+		color: white !important;
+		background-color: black;
+	}
+
+	form{
+		max-width: 400px;
+	}
+	form tr,td{
+		padding-bottom: 10px;
+		/*margin: 10px;*/
+	}
+	form input{
+		width: 220px;
+	}
+	.btn:hover{
+		text-decoration: none;
+		color: black !important;
+		background-color: white;
+		border: 2px solid black;
+	}
+</style>
+</head>
+<body>
+	<div class="container">
+		<div>
+			<h1>Info Update!</h1>
+		</div>
+		<hr class="rounded">
+		<div style="display: flex; justify-content: center">
+			<br/>
+			<div >
+				<form id="myForm" style="text-align: left; width: 100%;"  th:object="${user}" method="post">
+					<table>
+						<tr>
+							<td>Username:</td>
+							<td><input type="text" th:field="*{username}"  readonly="readonly"/></td>
+						</tr>
+						<tr>
+							<td>Display Name:</td>
+							<td><input type="text" th:field="*{displayName}" name="displayname" /></td>
+						</tr>
+						<tr>
+							<td>Password:</td>
+							<td><input type="text" th:field="*{password}" /></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<button id="btnSubmit" type="submit" class="btn btn-primary">Update</button>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+
+
+	$(document).ready(function () {
+		$("#btnSubmit").click(function (event) {
+			//stop submit the form, we will post it manually.
+			event.preventDefault();
+
+			// Get form
+			var form = $('#myForm')[0];
+			// FormData object
+			var data = new FormData(form);
+
+			let userPayload = {
+				username : data.get("username"),
+				displayname: data.get("displayName"),
+				password: data.get("password")
+			}
+
+			console.log(userPayload)
+
+			// disabled the submit button
+			$("#btnSubmit").prop("disabled", true);
+
+			$.ajax({
+				type: "POST",
+				enctype: 'multipart/form-data',
+				url: "/api/users/update",
+				data: JSON.stringify(userPayload),
+				processData: false,
+				contentType: 'application/json',
+				success: function (data) {
+					// window.location.replace("/");
+					console.log(data)
+					$("#btnSubmit").prop("disabled", false);
+				},
+				error: function (e) {
+					console.log("ERROR : ", e);
+					$("#btnSubmit").prop("disabled", false);
+				}
+			});
+		});
+	});
+
+	// document.querySelector('form').addEventListener('submit', (e) => {
+	// 	const url = e.target
+	// 	const formData = new FormData(e.target);
+	// 	// Now you can use formData.get('foo'), for example.
+	// 	// Don't forget e.preventDefault() if you want to stop normal form .submission
+	// 	console.log(formData.get("username"))
+	// 	console.log(formData.get("displayName"))
+	// 	console.log(formData.get("password"))
+	//
+	//
+	// 	var http = new XMLHttpRequest();
+	// 	const url = 'http://localhost:8080/api/users/update';
+	// 	http.open('POST', url, true);
+	//
+	// 	//Send the proper header information along with the request
+	// 	http.setRequestHeader('Content-type', 'application/json');
+	//
+	// 	// Creating User Payload
+	// 	let userPayload = {
+	// 		username : formData.get("username"),
+	// 		displayname: formData.get("displayname"),
+	// 		password: formData.get("password")
+	// 	}
+	//
+	// 	//Call a function when the state changes.
+	// 	http.onload = function (){
+	// 		if (this.status == 200){
+	// 			alert(http.responseText);
+	// 			// // User added successfully in the database.
+	// 			// // Redirect to the userInfo Page
+	// 			// window.location.replace("/infoPage?username="+user.email);
+	// 			// // Redirect to the home page
+	//
+	// 		} else {
+	// 			alert("Something went wrong. " + this.responseText)
+	// 		}
+	// 	}
+	//
+	// 	http.onerror = function (error){
+	// 		console.log(error.status, error.error, error.message)
+	// 		alert("Oops! Network error");
+	// 	}
+	//
+	// 	http.send(JSON.stringify(userPayload));
+	// });
+</script>
+</html>

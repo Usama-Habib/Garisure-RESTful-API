@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http:/www.thymeleaf.org">
+<head th:replace="fragments :: html_head(pageTitle='Registration Success')" />
+<style type="text/css">
+	html, body{
+		background-color: black;
+		padding: 20px;
+	}
+
+	.container{
+		padding: 20px;
+		border-radius: 10px;
+		font-family: sans-serif;
+		text-align: center;
+		width: 75%;
+		height: 75vh;
+		background-color: white;
+		position: absolute;
+		top:0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		margin: auto;
+	}
+
+	/* Rounded border */
+	hr.rounded {
+		width: 100px;
+		text-align: center;
+		border-top: 2px solid black;
+		border-radius: 5px;
+		margin: 30px auto;
+
+	}
+	.btn {
+		width: 300px;
+		height: 40px;
+		border-radius: 5px;
+		cursor: pointer;
+		color: white !important;
+		background-color: black;
+	}
+
+	.btn:hover{
+		text-decoration: none;
+		color: black !important;
+		background-color: white;
+		border: 2px solid black;
+	}
+</style>
+<body>
+	<div class="container">
+		<div>
+			<h1>Thanks for taking your time to get registered!</h1>
+		</div>
+		<hr class="rounded">
+		<div>
+			<h3>We suggest you to update your user info!</h3>
+		</div>
+		<div style="display: flex; justify-content: space-evenly; padding: 20px">
+			<div>
+				<a class="btn" th:href="@{/}">Return to Home</a>
+			</div>
+			<div>
+				<a id="btn-userinfo" th:href="@{#}" class="btn">My Info</a>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+	const urlParams = new URLSearchParams(window.location.search);
+	const myParam = urlParams.get('userId');
+	if(myParam != null){
+		document.getElementById("btn-userinfo").setAttribute("href","/api/users/edit/"+myParam)
+	}
+
+</script>
+</html>

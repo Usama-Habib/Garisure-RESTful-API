@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http:/www.thymeleaf.org">
+<head th:replace="fragments :: html_head(pageTitle='Signup')" />
+<style type="text/css">
+	html, body{
+		background-color: black;
+		padding: 20px;
+	}
+
+	.container{
+		padding: 20px;
+		border-radius: 10px;
+		font-family: sans-serif;
+		text-align: center;
+		width: 75%;
+		height: 75vh;
+		background-color: white;
+		position: absolute;
+		top:0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		margin: auto;
+	}
+	.btn {
+		width: 300px;
+		height: 40px;
+		border-radius: 5px;
+		cursor: pointer;
+		color: white !important;
+		background-color: black;
+	}
+
+	.btn:hover{
+		text-decoration: none;
+		color: black !important;
+		background-color: white;
+		border: 2px solid black;
+	}
+	/* Rounded border */
+	hr.rounded {
+		width: 100px;
+		text-align: center;
+		border-top: 2px solid black;
+		border-radius: 5px;
+		margin: 30px auto;
+
+	}
+
+</style>
+<body>
+<div class="container">
+	<div style="margin-top: 80px">
+		<h1 style="text-transform: uppercase">Welcome to the Sign-up Page</h1>
+		<br/>
+	</div>
+	<div style="margin: 60px auto;">
+		<div>
+			<a class="btn" id="signupWithGoogle">Sign-up with Google</a>
+		</div>
+		<hr class="rounded">
+
+
+		<a th:href="@{/loginPage}"><u>Already a member?</u></a>
+
+	</div>
+</div>
+<script type="module">
+	import { initializeApp } from "https://www.gstatic.com/firebasejs/9.11.0/firebase-app.js";
+	import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.11.0/firebase-analytics.js";
+	import { getAuth, signInWithPopup, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/9.11.0/firebase-auth.js'
+
+	const firebaseConfig = {
+		apiKey: "AIzaSyA1NDlxFqSv06fadp9PeIfdFm4eL_FJti4",
+		authDomain: "spring-boot-rest-api-5d6f4.firebaseapp.com",
+		projectId: "spring-boot-rest-api-5d6f4",
+		storageBucket: "spring-boot-rest-api-5d6f4.appspot.com",
+		messagingSenderId: "1074963160566",
+		appId: "1:1074963160566:web:d97a191005899db39dfbd7",
+		measurementId: "G-M5ZBE52287"
+	};
+
+	const app = initializeApp(firebaseConfig);
+	const analytics = getAnalytics(app);
+	const auth = getAuth();
+	const provider = new GoogleAuthProvider();
+	provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+
+
+	function signUpFunc(){
+
+		signInWithPopup(auth, provider)
+				.then((result) => {
+					// This gives you a Google Access Token. You can use it to access the Google API.
+					// const credential = GoogleAuthProvider.credentialFromResult(result);
+					// const token = credential.accessToken;
+					// // The signed-in user info.
+					// const user = result.user;
+					writeToDatabase(result.user);
+				})
+				.catch((error) => {
+					// Handle Errors here.
+					// const errorCode = error.code;
+					// const errorMessage = error.message;
+					// // The email of the user's account used.
+					// const email = error.customData.email;
+					// // The AuthCredential type that was used.
+					// const credential = GoogleAuthProvider.credentialFromError(error);
+					console.log(error.status + " " + error.message  +" "  + error.error)
+
+				});
+	}
+
+	document.querySelector('#signupWithGoogle').addEventListener('click', signUpFunc);
+
+	function writeToDatabase(user){
+
+		var http = new XMLHttpRequest();
+		const url = 'http://localhost:8080/api/auth/signup';
+		http.open('POST', url, true);
+
+		//Send the proper header information along with the request
+		http.setRequestHeader('Content-type', 'application/json');
+
+		// Creating User Payload
+		let userPayload = {
+			displayname: user.displayName,
+			username: user.email,
+			uid: user.uid,
+			password: "root"
+		}
+
+		//Call a function when the state changes.
+		http.onload = function (){
+			if (this.status == 200){
+				let userId = JSON.parse(http.responseText).id;
+				// User added successfully in the database.
+				// Redirect to the userInfo Page
+				window.location.replace("/infoPage?userId="+ userId);
+				// Redirect to the home page
+
+			} else if (this.status == 400){
+				alert("Username has already taken");
+				window.location.replace("/");
+			} else {
+				alert("Something went wrong. " + this.responseText)
+			}
+		}
+
+		http.onerror = function (error){
+			console.log(error.status, error.error, error.message)
+			alert("Oops! Network error");
+		}
+
+
+		// http.onreadystatechange = function() {
+		// 	if(http.readyState == 4 && http.status == 200) {
+		// 		alert(http.responseText);
+		// 		// User added successfully in the database.
+		// 	}
+		// 	else if(http.readyState == 4 && http.status == 400){
+		// 		alert("Username already taken.")
+		// 		// User with the attempted username/email already exist in the database.
+		// 	}
+		// 	else{
+		// 		alert("Something went wrong. " + http.status)
+		// 	}
+		// }
+
+		http.send(JSON.stringify(userPayload));
+	}
+
+</script>
+</body>
+</html>

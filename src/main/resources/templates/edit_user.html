@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http:/www.thymeleaf.org">
+<head th:replace="fragments :: html_head(pageTitle='Registration Success')" />
+<style type="text/css">
+	html, body{
+		background-color: black;
+		padding: 20px;
+	}
+
+	.container{
+		padding: 20px;
+		border-radius: 10px;
+		font-family: sans-serif;
+		text-align: center;
+		width: 75%;
+		height: 75vh;
+		background-color: white;
+		position: absolute;
+		top:0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		margin: auto;
+	}
+
+	/* Rounded border */
+	hr.rounded {
+		width: 100px;
+		text-align: center;
+		border-top: 2px solid black;
+		border-radius: 5px;
+		margin: 30px auto;
+
+	}
+	.btn {
+		width: 300px;
+		height: 40px;
+		border-radius: 5px;
+		cursor: pointer;
+		color: white !important;
+		background-color: black;
+	}
+
+	form{
+		max-width: 400px;
+	}
+	form tr,td{
+		padding-bottom: 10px;
+		/*margin: 10px;*/
+	}
+	form input{
+		width: 220px;
+	}
+	.btn:hover{
+		text-decoration: none;
+		color: black !important;
+		background-color: white;
+		border: 2px solid black;
+	}
+</style>
+</head>
+<body>
+	<div class="container">
+		<div>
+			<h1>Edit User</h1>
+		</div>
+		<hr class="rounded">
+		<div style="display: flex; justify-content: center">
+			<br/>
+			<div >
+				<form style="text-align: left; width: 100%;" action="#" th:action="@{/api/users/edit/" th:object="${user}" method="post">
+					<table>
+						<tr>
+							<td>Username:</td>
+							<td><input disabled type="text" th:field="*{username}"  readonly="readonly"/></td>
+						</tr>
+						<tr>
+							<td>Display Name:</td>
+							<td><input type="text" th:field="*{displayName}" name="displayname" /></td>
+						</tr>
+						<tr>
+							<td>Password:</td>
+							<td><input disabled type="text" th:field="*{password}" /></td>
+						</tr>
+<!--							<tr>-->
+<!--								<td>Active Account:</td>-->
+<!--								<td><input type="radio" th:field="*{isActive()}"  readonly="readonly"/></td>-->
+<!--							</tr>-->
+						<tr>
+							<td colspan="2">
+								<button type="submit" class="btn btn-primary">Update</button>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS users (
+     id INT PRIMARY KEY AUTO_INCREMENT,
+     displayname VARCHAR(20) DEFAULT NULL,
+     username VARCHAR(20) NOT NULL,
+     password VARCHAR(20) NOT NULL,
+     uid VARCHAR(50) DEFAULT NULL,
+     role VARCHAR(15) DEFAULT 'ADMIN',
+     active TINYINT(1) DEFAULT 0
+);

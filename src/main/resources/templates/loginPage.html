@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http:/www.thymeleaf.org">
+<head th:replace="fragments :: html_head(pageTitle='Login')" />
+<style type="text/css">
+	html, body{
+		background-color: black;
+		padding: 20px;
+	}
+
+	.container{
+		padding: 20px;
+		border-radius: 10px;
+		font-family: sans-serif;
+		text-align: center;
+		width: 75%;
+		height: 75vh;
+		background-color: white;
+		position: absolute;
+		top:0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		margin: auto;
+	}
+
+	.btn {
+		width: 300px;
+		height: 40px;
+		border-radius: 5px;
+		cursor: pointer;
+		color: white;
+		background-color: black;
+	}
+
+	.btn:hover{
+		text-decoration: none;
+		color: black;
+		background-color: white;
+		border: 2px solid black;
+	}
+	/* Rounded border */
+	hr.rounded {
+		width: 100px;
+		text-align: center;
+		border-top: 2px solid black;
+		border-radius: 5px;
+		margin: 30px auto;
+
+	}
+
+</style>
+<body>
+<div class="container">
+	<div style="margin-top: 80px">
+		<h1 style="text-transform: uppercase">Welcome to the Login Page</h1>
+		<br/>
+	</div>
+	<div style="margin: 60px auto;">
+		<div>
+			<a class="btn" th:href="@{/oauth2/authorization/google}">Login with Google</a>
+		</div>
+		<hr class="rounded">
+
+
+		<a th:href="@{/signupPage}"><u>Want to become a new member?</u></a>
+
+
+	</div>
+</div>
+</body>
+</html>
